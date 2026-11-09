@@ -19,11 +19,15 @@
 
 3. **Chạy thử:**
    ```bash
-   python3 template.py
+   python template.py
    ```
 
 4. **Kiểm thử autograder:**
    ```bash
+   # Windows PowerShell (đã kích hoạt venv)
+   python -m pytest ../autograder/test_agent.py -v
+
+   # Linux/macOS
    python3 -m pytest ../autograder/test_agent.py -v
    ```
 

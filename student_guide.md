@@ -142,22 +142,22 @@ Trong class `ToolCallingAgent`, thuật toán Agent Loop được cài đặt th
     [needs_catalog] [needs_ticket]  [is_faq]
          │           │               │
          ▼           ▼               ▼
-    Iteration 1   Iteration 2    Final Answer
-    (catalog)     (ticket)       (trả lời trực tiếp)
-         │           │
-         └─────┬─────┘
-               ▼
-         Iteration 3
-    (Tổng hợp Final Answer)
+    Gọi catalog   Gọi ticket     Trả lời trực tiếp
+          │           │               │
+          └───────────┴───────────────┘
+                      ▼
+             Tổng hợp Final Answer
 ```
 
 **Các bước chính:**
 1. **Intent Detection:** Dùng keyword matching để xác định user cần tool nào.
-2. **Iteration 1:** Nếu cần catalog → gọi `search_product_catalog`, lưu vào trace.
-3. **Iteration 2:** Nếu cần ticket → gọi `submit_support_ticket`, lưu vào trace.
-4. **Iteration 3+:** Tổng hợp tất cả observation từ trace → xuất Final Answer.
+2. Nếu cần catalog → gọi `search_product_catalog`, lưu kết quả vào trace.
+3. Nếu cần ticket và đã đủ tên + mô tả → gọi `submit_support_ticket`, lưu kết quả vào trace.
+4. Tổng hợp observation thành Final Answer. Nếu không cần tool (FAQ), trả lời trực tiếp.
 
 **💡 Mẹo:** Luôn kiểm tra `intents["needs_catalog"]` và `intents["needs_ticket"]` để quyết định số iteration cần thiết.
+
+Trong starter code, số `iterations` là số tool được gọi, tối thiểu là 1; phần tổng hợp câu trả lời không tính thành một iteration riêng. Vì vậy FAQ không gọi tool và yêu cầu chỉ cần một tool đều có `iterations == 1`. Nếu một yêu cầu cần cả hai tool, mỗi tool được gọi độc lập và cả hai kết quả đều được tổng hợp.
 
 ---
 
@@ -203,6 +203,10 @@ if not results or len(results) == 0:
 
 Sau khi hoàn thành `template.py` và `tools.py`, chạy lệnh pytest:
 ```bash
+# Windows PowerShell (đã kích hoạt venv)
+python -m pytest autograder/test_agent.py -v
+
+# Linux/macOS
 python3 -m pytest autograder/test_agent.py -v
 ```
 
